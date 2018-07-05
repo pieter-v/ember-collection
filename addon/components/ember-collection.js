@@ -15,6 +15,8 @@ class Cell {
   }
 }
 
+function noop() {}
+
 export default Component.extend({
   layout: layout,
 
@@ -76,6 +78,15 @@ export default Component.extend({
     this.updateScrollPosition();
   },
 
+  willDestroyElement() {
+    if (this._items && this._items.removeArrayObserver) {
+      this._items.removeArrayObserver(this, {
+        willChange: noop,
+        didChange: '_needsRevalidate'
+      });
+    }
+  },
+
   updateItems(){
     this._cellLayout = this.getAttr('cell-layout');
     var rawItems = this.getAttr('items');
@@ -83,7 +94,7 @@ export default Component.extend({
     if (this._rawItems !== rawItems) {
       if (this._items && this._items.removeArrayObserver) {
         this._items.removeArrayObserver(this, {
-          willChange() {},
+          willChange: noop,
           didChange: '_needsRevalidate'
         });
       }
@@ -93,7 +104,7 @@ export default Component.extend({
 
       if (items && items.addArrayObserver) {
         items.addArrayObserver(this, {
-          willChange() {},
+          willChange: noop,
           didChange: '_needsRevalidate'
         });
       }
