@@ -279,10 +279,10 @@ export default Component.extend({
     },
     scrollChange(scrollLeft, scrollTop) {
       if (this._scrollChange) {
-        // console.log('ember-collection sendAction scroll-change', scrollTop);
-        // TODO: Migrate to closure actions...
-        // eslint-disable-next-line
-        this.sendAction('scroll-change', scrollLeft, scrollTop);
+        let scrollChangeAction = get(this, 'scroll-change')
+        if (scrollChangeAction) {
+          scrollChangeAction(scrollLeft, scrollTop);
+        }
       } else {
         if (scrollLeft !== this._scrollLeft ||
             scrollTop !== this._scrollTop) {
